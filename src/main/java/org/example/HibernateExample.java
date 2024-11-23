@@ -71,13 +71,13 @@ public class HibernateExample {
                     "u.id AS user_id, " +
                     "u.firstName, " +
                     "u.secondName " +
-                    "FROM hotel_order ho " + // Исправлено имя таблицы
-                    "JOIN hotels h ON ho.hotel_id = h.id " + // Исправлено имя таблицы
-                    "JOIN orders o ON ho.order_id = o.id " + // Исправлено имя таблицы
-                    "JOIN users u ON o.user_id = u.id " + // Исправлено имя таблицы
+                    "FROM hotel_order ho " +
+                    "JOIN hotels h ON ho.hotel_id = h.id " +
+                    "JOIN orders o ON ho.order_id = o.id " +
+                    "JOIN users u ON o.user_id = u.id " +
                     "WHERE EXISTS (" +
                     "SELECT 1 " +
-                    "FROM hotel_order ho2 " + // Исправлено имя таблицы
+                    "FROM hotel_order ho2 " +
                     "WHERE ho2.hotel_id = ho.hotel_id " +
                     "AND ho2.id <> ho.id " +
                     "AND (" +
