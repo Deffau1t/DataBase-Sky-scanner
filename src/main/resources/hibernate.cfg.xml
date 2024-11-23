@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/hometask</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">1</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Список классов сущностей -->
+        <mapping class="org.example.model.User"/>
+        <mapping class="org.example.model.Role"/>
+        <mapping class="org.example.model.Review"/>
+        <mapping class="org.example.model.PaymentInfo"/>
+        <mapping class="org.example.model.Order"/>
+        <mapping class="org.example.model.Hotel"/>
+        <mapping class="org.example.model.OrderStatus"/>
+        <mapping class="org.example.model.AirlineTicket"/>
+        <mapping class="org.example.model.CarRent"/>
+        <mapping class="org.example.model.HotelOrder"/>
+        <mapping class="org.example.model.CarRentOrder"/>
+    </session-factory>
+</hibernate-configuration>
