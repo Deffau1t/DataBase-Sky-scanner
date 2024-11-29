@@ -43,71 +43,16 @@ public class HibernateExample {
             hotelDataGenerator.generateData();
             orderDataGenerator.generateData();
             airlineTicketsDataGenerator.generateData();
-            paymentInfoDataGenerator.generateData();
             orderStatusDataGenerator.generateData();
+            paymentInfoDataGenerator.generateData();
             hotelOrderDataGenerator.generateData();
             reviewDataGenerator.generateData();
             carRentDataGenerator.generateData();
             carRentOrderDataGenerator.generateData();
-            // Выполнение SQL-запроса
-            executeSqlQuery();
-
             sessionFactory.close();
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private static void executeSqlQuery() {
-        try (Session session = sessionFactory.openSession()) {
-            String sqlQuery = "SELECT " +
-                    "ho.id AS hotel_order_id, " +
-                    "ho.startDate, " +
-                    "ho.endDate, " +
-                    "h.id AS hotel_id, " +
-                    "h.name AS hotel_name, " +
-                    "o.id AS order_id, " +
-                    "u.id AS user_id, " +
-                    "u.firstName, " +
-                    "u.secondName " +
-                    "FROM hotel_order ho " +
-                    "JOIN hotels h ON ho.hotel_id = h.id " +
-                    "JOIN orders o ON ho.order_id = o.id " +
-                    "JOIN users u ON o.user_id = u.id " +
-                    "WHERE EXISTS (" +
-                    "SELECT 1 " +
-                    "FROM hotel_order ho2 " +
-                    "WHERE ho2.hotel_id = ho.hotel_id " +
-                    "AND ho2.id <> ho.id " +
-                    "AND (" +
-                    "(ho2.startDate BETWEEN ho.startDate AND ho.endDate) OR " +
-                    "(ho2.endDate BETWEEN ho.startDate AND ho.endDate) OR " +
-                    "(ho.startDate BETWEEN ho2.startDate AND ho2.endDate) OR " +
-                    "(ho.endDate BETWEEN ho2.startDate AND ho2.endDate)" +
-                    ")" +
-                    ") " +
-                    "ORDER BY h.id, ho.startDate";
-
-            NativeQuery<Object[]> query = session.createNativeQuery(sqlQuery);
-            List<Object[]> results = query.getResultList();
-
-            if (results.isEmpty()) {
-                System.out.println("No overlapping bookings found. Data generation is correct.");
-            } else {
-                System.out.println("Overlapping bookings found:");
-                for (Object[] result : results) {
-                    System.out.println("HotelOrder ID: " + result[0] +
-                            ", Start Date: " + result[1] +
-                            ", End Date: " + result[2] +
-                            ", Hotel ID: " + result[3] +
-                            ", Hotel Name: " + result[4] +
-                            ", Order ID: " + result[5] +
-                            ", User ID: " + result[6] +
-                            ", First Name: " + result[7] +
-                            ", Second Name: " + result[8]);
-                }
-            }
         }
     }
 }

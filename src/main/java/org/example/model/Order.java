@@ -16,6 +16,9 @@ public class Order {
     @Column(nullable = false)
     private String type;
 
+    @Column(nullable = false)
+    private LocalDate date;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

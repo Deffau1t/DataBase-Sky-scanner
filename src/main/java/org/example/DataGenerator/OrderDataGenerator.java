@@ -2,6 +2,7 @@ package org.example.DataGenerator;
 
 import org.example.HibernateExample;
 import org.example.model.Hotel;
+import org.example.model.HotelOrder;
 import org.example.model.Order;
 import org.example.model.User;
 import org.hibernate.Session;
@@ -48,6 +49,9 @@ public class OrderDataGenerator implements DataGenerator {
         // Выбираем случайные User и Hotel
         User user = users.get(random.nextInt(users.size()));
         order.setUser(user);
+
+        LocalDate now = LocalDate.now();
+        order.setDate(now.plusDays(random.nextInt(30)));
 
         // Генерация случайного типа заказа
         String[] types = {"Hotel", "CarRent", "AirlineTicket"};

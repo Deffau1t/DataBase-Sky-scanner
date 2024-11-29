@@ -16,9 +16,6 @@ public class Hotel {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private LocalDate freeDate;
-
     @Column()
     private String description;
 }

@@ -47,9 +47,12 @@ public class HotelOrderDataGenerator implements DataGenerator {
         Random random = new Random();
         HotelOrder hotelOrder = new HotelOrder();
 
-        // Выбираем случайные Hotel и Order
+        List<Order> filteredOrders = orders.stream()
+                .filter(order -> order.getType().equals("Hotel"))
+                .toList();
+
         Hotel hotel = hotels.get(random.nextInt(hotels.size()));
-        Order order = orders.get(random.nextInt(orders.size()));
+        Order order = filteredOrders.get(random.nextInt(filteredOrders.size()));
 
         hotelOrder.setHotel(hotel);
         hotelOrder.setOrder(order);
@@ -58,6 +61,11 @@ public class HotelOrderDataGenerator implements DataGenerator {
         LocalDate now = LocalDate.now();
         LocalDate startDate = now.plusDays(random.nextInt(30));
         LocalDate endDate = startDate.plusDays(random.nextInt(30) + 1);
+
+         if (order.getDate().isAfter(startDate)) {
+            startDate = order.getDate();
+            endDate = startDate.plusDays(random.nextInt(30) + 1);
+        }
 
         // Проверка доступности даты
         if (isDateAvailable(session, hotel, startDate, endDate)) {

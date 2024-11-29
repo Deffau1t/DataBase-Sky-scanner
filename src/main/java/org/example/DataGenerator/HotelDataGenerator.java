@@ -36,12 +36,10 @@ public class HotelDataGenerator implements DataGenerator {
     }
 
     private static Hotel generateRandomHotel() {
-        Random random = new Random();
         Hotel hotel = new Hotel();
 
         // Генерация случайных данных
         hotel.setName(generateRandomName());
-        hotel.setFreeDate(LocalDate.now().plusDays(random.nextInt(30)));
         hotel.setDescription(generateRandomDescription());
 
         return hotel;

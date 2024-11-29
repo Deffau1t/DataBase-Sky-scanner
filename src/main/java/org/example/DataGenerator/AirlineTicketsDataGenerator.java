@@ -45,14 +45,26 @@ public class AirlineTicketsDataGenerator implements DataGenerator {
         Random random = new Random();
         AirlineTicket ticket = new AirlineTicket();
 
-        // Выбираем случайный Order
-        Order order = orders.get(random.nextInt(orders.size()));
+        List<Order> filteredOrders = orders.stream()
+                .filter(order -> order.getType().equals("AirlineTicket"))
+                .toList();
+
+        Order order = filteredOrders.get(random.nextInt(filteredOrders.size()));
         ticket.setOrder(order);
 
         // Генерация случайных дат
         LocalDate now = LocalDate.now();
-        ticket.setTimeArrive(now.plusDays(random.nextInt(30)));
-        ticket.setTimeDeparture(now.plusDays(random.nextInt(30)));
+        LocalDate timeDeparture = now.plusDays(random.nextInt(30));
+        LocalDate timeArrive = timeDeparture.plusDays(random.nextInt(30) + 1);
+
+        // Убеждаемся, что дата заказа не позднее timeDeparture
+        if (order.getDate().isAfter(timeDeparture)) {
+            timeDeparture = order.getDate();
+            timeArrive = timeDeparture.plusDays(random.nextInt(30) + 1);
+        }
+
+        ticket.setTimeDeparture(timeDeparture);
+        ticket.setTimeArrive(timeArrive);
 
         // Генерация случайных городов
         String cityDeparture = generateRandomCity();

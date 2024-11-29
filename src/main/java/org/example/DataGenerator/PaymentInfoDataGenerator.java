@@ -1,10 +1,7 @@
 package org.example.DataGenerator;
 
 import org.example.HibernateExample;
-import org.example.model.Order;
-import org.example.model.PaymentInfo;
-import org.example.model.Role;
-import org.example.model.User;
+import org.example.model.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -27,10 +24,11 @@ public class PaymentInfoDataGenerator implements DataGenerator {
             // Загружаем существующие User и Order для связывания
             List<User> users = session.createQuery("FROM User", User.class).getResultList();
             List<Order> orders = session.createQuery("FROM Order", Order.class).getResultList();
+            List<OrderStatus> orderStatuses = session.createQuery("FROM OrderStatus", OrderStatus.class).getResultList();
             List<Role> roles = session.createQuery("FROM Role", Role.class).getResultList();
 
             for (int i = 0; i < TOTAL_RECORDS; i++) {
-                PaymentInfo paymentInfo = generateRandomPaymentInfo(users, orders, roles);
+                PaymentInfo paymentInfo = generateRandomPaymentInfo(orderStatuses, roles);
                 if (paymentInfo != null) {
                     session.save(paymentInfo);
 
@@ -47,13 +45,17 @@ public class PaymentInfoDataGenerator implements DataGenerator {
         }
     }
 
-    private static PaymentInfo generateRandomPaymentInfo(List<User> users, List<Order> orders, List<Role> roles) {
+    private static PaymentInfo generateRandomPaymentInfo(List<OrderStatus> orderStatuses, List<Role> roles) {
         Random random = new Random();
         PaymentInfo paymentInfo = null;
 
-        // Выбираем случайные User и Order
-        User user = users.get(random.nextInt(users.size()));
-        Order order = orders.get(random.nextInt(orders.size()));
+        List<OrderStatus> filteredOrderStatuses = orderStatuses.stream()
+                .filter(orderStatus -> orderStatus.getStatus().equals("Processing")
+                        || orderStatus.getStatus().equals("Completed"))
+                .toList();
+
+        Order order = filteredOrderStatuses.get(random.nextInt(filteredOrderStatuses.size())).getOrder();
+        User user = order.getUser();
 
         // Проверяем, что у пользователя нет роли "Guest"
         boolean isGuest = roles.stream()

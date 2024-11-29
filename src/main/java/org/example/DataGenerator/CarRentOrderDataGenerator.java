@@ -47,17 +47,29 @@ public class CarRentOrderDataGenerator implements DataGenerator {
         Random random = new Random();
         CarRentOrder carRentOrder = new CarRentOrder();
 
-        // Выбираем случайные CarRent и Order
+        List<Order> filteredOrders = orders.stream()
+                .filter(order -> order.getType().equals("CarRent"))
+                .toList();
+
         CarRent carRent = carRents.get(random.nextInt(carRents.size()));
-        Order order = orders.get(random.nextInt(orders.size()));
+        Order order = filteredOrders.get(random.nextInt(filteredOrders.size()));
 
         carRentOrder.setCarRent(carRent);
         carRentOrder.setOrder(order);
 
         // Генерация случайных дат
         LocalDate now = LocalDate.now();
-        carRentOrder.setStartDate(now.plusDays(random.nextInt(30)));
-        carRentOrder.setEndDate(now.plusDays(random.nextInt(30) + 30));
+        LocalDate startDate = now.plusDays(random.nextInt(30));
+        LocalDate endDate = startDate.plusDays(random.nextInt(30) + 30);
+
+        // Убеждаемся, что дата заказа не позднее startDate
+        if (order.getDate().isAfter(startDate)) {
+            startDate = order.getDate();
+            endDate = startDate.plusDays(random.nextInt(30) + 30);
+        }
+
+        carRentOrder.setStartDate(startDate);
+        carRentOrder.setEndDate(endDate);
 
         return carRentOrder;
     }
